@@ -1,6 +1,13 @@
 golang socket.io
 ================
 
+golang implementation of [socket.io](http://socket.io) library, client and server
+
+You can check working chat server, based on caller library, at http://funstream.tv
+
+Examples directory contains simple client and server.
+
+
 ### Fork from graarh/golang-socketio to support multi args
 
 
@@ -28,12 +35,8 @@ golang socket.io
 	c.Close()
 ```
 
-================
-golang implementation of [socket.io](http://socket.io) library, client and server
+================ 
 
-You can check working chat server, based on caller library, at http://funstream.tv
-
-Examples directory contains simple client and server.
 
 ### Installation
 
