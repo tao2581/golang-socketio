@@ -33,7 +33,6 @@ func send(msg *protocol.Message, c *Channel, args ...interface{}) error {
 				return err
 			}
 			msg.Args += string(json) + ","
-			fmt.Println("args:", msg.Args)
 		}
 		msg.Args = strings.Trim(msg.Args, ",")
 	}
