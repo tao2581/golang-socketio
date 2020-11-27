@@ -1,6 +1,34 @@
 golang socket.io
 ================
 
+### Fork from graarh/golang-socketio to support multi args
+
+
+
+### Client
+
+```go
+    //connect to server, you can use your own transport settings
+	c, err := gosocketio.Dial(
+		gosocketio.GetUrl("localhost", 80, false),
+		transport.GetDefaultWebsocketTransport(),
+	)
+
+	//do something, handlers and functions are same as server ones
+	err = c.On(gosocketio.OnConnection, func(h *gosocketio.Channel) {
+   		log.Println("Connected")		
+	})
+	if err != nil {
+		log.Fatal(err)
+	}
+	
+	c.Emit("method", "arg2","arg3",4,false)
+	
+	//close connection
+	c.Close()
+```
+
+================
 golang implementation of [socket.io](http://socket.io) library, client and server
 
 You can check working chat server, based on caller library, at http://funstream.tv
@@ -140,20 +168,6 @@ var socket = io('ws://yourdomain.com', {transports: ['websocket']});
 	log.Panic(http.ListenAndServe(":80", serveMux))
 ```
 
-### Client
-
-```go
-    //connect to server, you can use your own transport settings
-	c, err := gosocketio.Dial(
-		gosocketio.GetUrl("localhost", 80, false),
-		transport.GetDefaultWebsocketTransport(),
-	)
-
-	//do something, handlers and functions are same as server ones
-
-	//close connection
-	c.Close()
-```
 
 ### Roadmap
 
