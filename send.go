@@ -3,9 +3,11 @@ package gosocketio
 import (
 	"encoding/json"
 	"errors"
-	"github.com/graarh/golang-socketio/protocol"
 	"log"
+	"strings"
 	"time"
+
+	"github.com/graarh/golang-socketio/protocol"
 )
 
 var (
@@ -16,7 +18,7 @@ var (
 /**
 Send message packet to socket
 */
-func send(msg *protocol.Message, c *Channel, args interface{}) error {
+func send(msg *protocol.Message, c *Channel, args ...interface{}) error {
 	//preventing json/encoding "index out of range" panic
 	defer func() {
 		if r := recover(); r != nil {
@@ -25,12 +27,15 @@ func send(msg *protocol.Message, c *Channel, args interface{}) error {
 	}()
 
 	if args != nil {
-		json, err := json.Marshal(&args)
-		if err != nil {
-			return err
+		for _, v := range args {
+			json, err := json.Marshal(&v)
+			if err != nil {
+				return err
+			}
+			msg.Args += string(json) + ","
+			fmt.Println("args:", msg.Args)
 		}
-
-		msg.Args = string(json)
+		msg.Args = strings.Trim(msg.Args, ",")
 	}
 
 	command, err := protocol.Encode(msg)
@@ -41,7 +46,6 @@ func send(msg *protocol.Message, c *Channel, args interface{}) error {
 	if len(c.out) == queueBufferSize {
 		return ErrorSocketOverflood
 	}
-
 	c.out <- command
 
 	return nil
@@ -50,13 +54,13 @@ func send(msg *protocol.Message, c *Channel, args interface{}) error {
 /**
 Create packet based on given data and send it
 */
-func (c *Channel) Emit(method string, args interface{}) error {
+func (c *Channel) Emit(method string, args ...interface{}) error {
 	msg := &protocol.Message{
 		Type:   protocol.MessageTypeEmit,
 		Method: method,
 	}
 
-	return send(msg, c, args)
+	return send(msg, c, args...)
 }
 
 /**
